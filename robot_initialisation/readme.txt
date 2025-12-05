@@ -1,4 +1,6 @@
-These files are used to connect the Elephant Robotics MyArm 300 Pi with another PC.
+These files are used to connect the Elephant Robotics MyArm 300 Pi with a PC. 
+
+The main goal is to control the arm "bypassing" the Raspberry Pi. The 
 
 The "ros_lan_driver.py" and "start_mission.py" run in the desktop and the "..." runs in the Raspberry Pi of the robot.
 
