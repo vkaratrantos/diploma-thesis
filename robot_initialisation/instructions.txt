@@ -7,8 +7,50 @@ The main goal is to control the arm "bypassing" the Raspberry Pi's internal ROS.
 ros_lan_driver.py: Runs on the PC and acts as the hardware driver.
 
 Network Setup 
+
 1. Connect the PC and the Robotic Arm directly using a LAN Cable.
 2. Set the PC's wired IPv4 address to : 192.168.123.10
 3. Set the Pi's wired IPv4 address to : 192.168.123.20
 
-(E
+(Make sure to test the connection between the Pi and the PC using the command "ping" before the next steps)
+
+Usage Instructions 
+
+1. Raspberry Pi (Bridge)
+
+SSH into the Raspberry Pi (or use a monitor and a keyboard) and run these commands to open the ports :
+
+# Start the daemon for Gripper control (Port 8888)
+$ sudo pigpiod
+
+# Forward the Serial Port to the Network (Port 8889)
+$ socat TCP-LISTEN:8889,fork,reuseaddr FILE:/dev/ttyAMA0,b1000000,raw,echo=0
+
+2. PC (Terminal 1 - Virtual Connection)
+
+Create the virtual serial port that links with the Pi :
+
+$ socat pty,link=/tmp/virtual_robot,raw tcp:192.168.123.20:8889
+
+Keep the terimal open
+
+3. PC (Terminal 2 - The Driver)
+
+Navigate to the folder containing ros_lan_driver.py and run the file.
+
+Example:
+
+$ cd ~/my_robot
+$ python3 ros_lan_driver.py
+
+Wait until you see the message that confirms the connection
+
+4. PC (Terminal 3 - The controller)
+
+With the driver running, you can finally control the robot.
+
+We will choose to control it through moveit and we will visualise the robot.
+
+Example :
+
+$ ros2 launch myarm_300_pi_moveit_config demo.launch.py
